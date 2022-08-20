@@ -30,14 +30,18 @@ func RemoteRegister() (err error) {
 		return
 	}
 	pid := os.Getpid()
-	signStr := "faDeployerId=" + faDeployerId.String() + "&host=" + host + "&pid=" + gconv.String(pid) + "&faDeployerKey=" + faDeployerKey.String()
+	path, _ := os.Executable()
+	signStr := "appPath=" + path + "&faDeployerId=" + faDeployerId.String() + "&host=" + host + "&pid=" + gconv.String(pid) + "&faDeployerKey=" + faDeployerKey.String()
 	signMd5, _ := gmd5.EncryptString(signStr)
 	reg := g.Map{
+		"appPath":      path,
 		"host":         host,
 		"faDeployerId": faDeployerId.String(),
 		"pid":          pid,
 		"sign":         signMd5,
 	}
 	g.Dump(reg)
+	url := "https://api.deployer.fain.cn/open-api/register/go-app"
+	g.Dump(url)
 	return
 }
