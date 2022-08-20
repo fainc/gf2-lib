@@ -28,8 +28,8 @@ func (c *cManager) Reboot(ctx context.Context, req *RebootReq) (res *RebootRes, 
 		err = response.StandardError(ctx, -101, "未配置服务端密码", nil)
 		return
 	}
-	signStr := "filePath=" + req.FilePath + "&pid=" + gconv.String(res.Pid) + "&password="
-	serverSign, err := gmd5.EncryptString(signStr + password.String())
+	signStr := "filePath=" + req.FilePath + "&pid=" + gconv.String(res.Pid) + "&password=" + password.String()
+	serverSign, err := gmd5.EncryptString(signStr)
 	if err != nil {
 		return
 	}
