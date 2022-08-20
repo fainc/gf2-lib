@@ -6,8 +6,8 @@ import (
 
 type RebootReq struct {
 	g.Meta   `path:"/manager/reboot" tags:"系统管理" method:"get" summary:"热重启系统"`
-	FilePath string `json:"filePath" p:"filePath" v:"required"`
-	Password string `json:"password" p:"password" v:"required"`
+	FilePath string `json:"filePath" p:"filePath" v:"required#参数错误"`
+	Sign     string `json:"sign" p:"sign" v:"required#参数错误"`
 }
 
 type RebootRes struct {

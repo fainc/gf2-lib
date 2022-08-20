@@ -19,9 +19,8 @@ func (c *cManager) Reboot(ctx context.Context, req *RebootReq) (res *RebootRes, 
 	res = &RebootRes{
 		Pid: os.Getpid(),
 	}
-	password, err := g.Cfg().Get(ctx, "rebootPassword")
+	password, err := g.Cfg().Get(ctx, "server.gracefulPassword")
 	if err != nil {
-		err = response.StandardError(ctx, -101, "配置错误", err.Error())
 		return
 	}
 	if password.String() == "" {
@@ -30,16 +29,14 @@ func (c *cManager) Reboot(ctx context.Context, req *RebootReq) (res *RebootRes, 
 	}
 	serverPassword, err := gmd5.EncryptString(password.String())
 	if err != nil {
-		err = response.StandardError(ctx, -101, "配置错误", err.Error())
 		return
 	}
-	userPassword, err := gmd5.EncryptString(req.Password)
+	userPassword, err := gmd5.EncryptString(req.Sign)
 	if err != nil {
-		err = response.StandardError(ctx, -101, "配置错误", err.Error())
 		return
 	}
 	if serverPassword != userPassword {
-		err = response.StandardError(ctx, -102, "管理密码错误", nil)
+		err = response.StandardError(ctx, -102, "密码无效", nil)
 		return
 	}
 	err = ghttp.RestartAllServer(ctx, req.FilePath)
