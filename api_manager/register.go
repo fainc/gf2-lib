@@ -13,32 +13,32 @@ import (
 // RemoteRegister 部署者远程注册
 func RemoteRegister() (err error) {
 	host, _ := os.Hostname()
-	faDeployerId, err := g.Cfg().Get(context.Background(), "server.faDeployerId")
+	deployerAppId, err := g.Cfg().Get(context.Background(), "server.deployerAppId")
 	if err != nil {
 		return
 	}
-	if faDeployerId.String() == "" {
-		err = errors.New("未设置faDeployerId")
+	if deployerAppId.String() == "" {
+		err = errors.New("未设置deployerAppId")
 		return
 	}
-	faDeployerKey, err := g.Cfg().Get(context.Background(), "server.faDeployerKey")
+	deployerAppSecret, err := g.Cfg().Get(context.Background(), "server.deployerAppSecret")
 	if err != nil {
 		return
 	}
-	if faDeployerKey.String() == "" {
-		err = errors.New("未设置faDeployerKey")
+	if deployerAppSecret.String() == "" {
+		err = errors.New("未设置deployerAppSecret")
 		return
 	}
 	pid := os.Getpid()
 	path, _ := os.Executable()
-	signStr := "appPath=" + path + "&faDeployerId=" + faDeployerId.String() + "&host=" + host + "&pid=" + gconv.String(pid) + "&faDeployerKey=" + faDeployerKey.String()
+	signStr := "appPath=" + path + "&deployerAppId=" + deployerAppId.String() + "&host=" + host + "&pid=" + gconv.String(pid) + "&faDeployerKey=" + deployerAppSecret.String()
 	signMd5, _ := gmd5.EncryptString(signStr)
 	reg := g.Map{
-		"appPath":      path,
-		"host":         host,
-		"faDeployerId": faDeployerId.String(),
-		"pid":          pid,
-		"sign":         signMd5,
+		"appPath":       path,
+		"host":          host,
+		"deployerAppId": deployerAppId.String(),
+		"pid":           pid,
+		"sign":          signMd5,
 	}
 	g.Dump(reg)
 	url := "https://api.deployer.fain.cn/open-api/register/go-app"
