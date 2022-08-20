@@ -40,8 +40,7 @@ func RemoteRegister() (err error) {
 		"pid":           pid,
 		"sign":          signMd5,
 	}
-	g.Dump(reg)
 	url := "https://api.deployer.fain.cn/open-api/register/go-app"
-	g.Dump(url)
+	_ = g.Client().PostContent(context.Background(), url, reg)
 	return
 }
