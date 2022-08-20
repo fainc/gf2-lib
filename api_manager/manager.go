@@ -20,8 +20,12 @@ func (c *cManager) Reboot(ctx context.Context, req *RebootReq) (res *RebootRes, 
 		Pid: os.Getpid(),
 	}
 	password, err := g.Cfg().Get(ctx, "rebootPassword")
-	if err != nil || password.String() == "" {
+	if err != nil {
 		err = response.StandardError(ctx, -101, "配置错误", err.Error())
+		return
+	}
+	if password.String() == "" {
+		err = response.StandardError(ctx, -101, "未配置服务端密码", nil)
 		return
 	}
 	serverPassword, err := gmd5.EncryptString(password.String())
