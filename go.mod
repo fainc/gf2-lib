@@ -1,4 +1,4 @@
-module gf2-lib
+module github.com/fainc/gf2-lib
 
 go 1.18
 
