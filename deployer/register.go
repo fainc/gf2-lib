@@ -1,4 +1,4 @@
-package api_manager
+package deployer
 
 import (
 	"context"
@@ -10,9 +10,22 @@ import (
 	"github.com/gogf/gf/v2/util/gconv"
 )
 
-// RemoteRegister 部署者远程注册
+// RemoteRegister 部署中心远程注册
+// deployerCenterHost 部署中心远端域名定义 一般为 https://api.deployer.fain.cn
+// deployerConnectHost 本机通讯域名/IP 用于部署中心与本机通讯（心跳检查、更新通知、热更新等），不要使用集群或负载均衡域名，如应用多机部署请使用每个IP+端口号形式注册
+// deployerAppId 部署中心分配 deployerAppId
+// deployerAppSecret 部署中心分配 deployerAppSecret
+
 func RemoteRegister() (err error) {
 	host, _ := os.Hostname()
+	deployerHeartbeatUrl, err := g.Cfg().Get(context.Background(), "server.deployerConnectHost")
+	if err != nil {
+		return
+	}
+	if deployerHeartbeatUrl.String() == "" {
+		err = errors.New("未设置deployerConnectHost")
+		return
+	}
 	deployerAppId, err := g.Cfg().Get(context.Background(), "server.deployerAppId")
 	if err != nil {
 		return

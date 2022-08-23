@@ -1,4 +1,4 @@
-package api_manager
+package deployer
 
 import (
 	"context"
