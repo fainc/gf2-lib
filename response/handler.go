@@ -20,8 +20,8 @@ func HandlerResponse(r *ghttp.Request) {
 	if r.RequestURI == "/api.json" {
 		return
 	}
-	// 已有自定义输出内容，不作处理
-	if r.Response.BufferLength() > 0 && gmeta.Get(res, "mime").String() == "custom" {
+	// 已标记自定义输出或存在buffer，不作处理
+	if r.Response.BufferLength() > 0 || gmeta.Get(res, "mime").String() == "custom" {
 		return
 	}
 	if err != nil {
